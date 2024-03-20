@@ -1,10 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `torneoscsgo` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `torneoscsgo`;
--- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: localhost    Database: torneoscsgo
 -- ------------------------------------------------------
--- Server version	8.0.35
+-- Server version	8.0.36
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -90,6 +88,20 @@ CREATE TABLE `estadio` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Temporary view structure for view `ingresos_y_pedidos_totales_por_mes`
+--
+
+DROP TABLE IF EXISTS `ingresos_y_pedidos_totales_por_mes`;
+/*!50001 DROP VIEW IF EXISTS `ingresos_y_pedidos_totales_por_mes`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `ingresos_y_pedidos_totales_por_mes` AS SELECT 
+ 1 AS `Mes`,
+ 1 AS `Dinero_Generado`,
+ 1 AS `Pedidos_Realizados`*/;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `jugador`
 --
 
@@ -148,13 +160,15 @@ CREATE TABLE `pedido` (
   `estado_Transacción` enum('Realizado','Procesando','Pendiente') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `NºTarjeta_Débito/Crédito` varchar(19) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `Comprador_DNI` varchar(11) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `tipo_entrada` varchar(50) DEFAULT NULL,
+  `tipo_entrada` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `cantidad` int DEFAULT NULL,
   `estadio_sesion` int DEFAULT NULL,
   PRIMARY KEY (`fecha_Compra`),
   UNIQUE KEY `NºTarjeta_Débito/Crédito_UNIQUE` (`NºTarjeta_Débito/Crédito`),
   KEY `fk_Pedido_Comprador1_idx` (`Comprador_DNI`),
-  CONSTRAINT `fk_Pedido_Comprador1` FOREIGN KEY (`Comprador_DNI`) REFERENCES `comprador` (`DNI`)
+  KEY `fk_Pedido_Tipo_Entrada` (`tipo_entrada`,`estadio_sesion`),
+  CONSTRAINT `fk_Pedido_Comprador1` FOREIGN KEY (`Comprador_DNI`) REFERENCES `comprador` (`DNI`),
+  CONSTRAINT `fk_Pedido_Tipo_Entrada` FOREIGN KEY (`tipo_entrada`, `estadio_sesion`) REFERENCES `entrada` (`Tipo_Entrada`, `Estadio_Sesion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -253,6 +267,55 @@ CREATE TABLE `torneo` (
   CONSTRAINT `fk_Torneo_Torneo1` FOREIGN KEY (`clasifica_Para`) REFERENCES `torneo` (`nombre_Torneo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary view structure for view `victorias_de_cada_equipo`
+--
+
+DROP TABLE IF EXISTS `victorias_de_cada_equipo`;
+/*!50001 DROP VIEW IF EXISTS `victorias_de_cada_equipo`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `victorias_de_cada_equipo` AS SELECT 
+ 1 AS `InfoEquipo`,
+ 1 AS `Victorias_Nacionales`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Final view structure for view `ingresos_y_pedidos_totales_por_mes`
+--
+
+/*!50001 DROP VIEW IF EXISTS `ingresos_y_pedidos_totales_por_mes`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`SqlAdmin_m`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `ingresos_y_pedidos_totales_por_mes` AS select concat(month(`p`.`fecha_Compra`),'-',convert(monthname(`p`.`fecha_Compra`) using utf8mb4)) AS `Mes`,sum(`p`.`Importe`) AS `Dinero_Generado`,count(0) AS `Pedidos_Realizados` from `pedido` `p` group by `Mes` order by `Dinero_Generado` desc */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `victorias_de_cada_equipo`
+--
+
+/*!50001 DROP VIEW IF EXISTS `victorias_de_cada_equipo`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`SqlAdmin_m`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `victorias_de_cada_equipo` AS select concat('ID: ',`e`.`id_Equipo`,' Nombre: ',`e`.`nombre`) AS `InfoEquipo`,count(`p`.`id_Partido`) AS `Victorias_Nacionales` from (((`equipo` `e` join `partido` `p` on(((`e`.`id_Equipo` = `p`.`Equipo1`) or (`e`.`id_Equipo` = `p`.`Equipo2`)))) join `sesión` `s` on((`p`.`Sesion_Estadio_id_Estadio` = `s`.`Estadio`))) join `torneo` `t` on((`s`.`Torneo` = `t`.`nombre_Torneo`))) where (((`p`.`Equipo1` = `e`.`id_Equipo`) and (`p`.`ResultadoEquipo1` > `p`.`ResultadoEquipo2`)) or ((`p`.`Equipo2` = `e`.`id_Equipo`) and (`p`.`ResultadoEquipo2` > `p`.`ResultadoEquipo1`) and (`t`.`Tipo` = 'Nacional'))) group by `e`.`id_Equipo` order by count(`p`.`id_Partido`) desc */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -263,4 +326,4 @@ CREATE TABLE `torneo` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-04  9:21:15
+-- Dump completed on 2024-03-20 14:33:15
