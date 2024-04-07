@@ -35,16 +35,15 @@ group by Mes
 order by Dinero_Generado desc;
 
 /*consulta nº5*/
-select c.país_Residencia as Pais, count(*) as Cantidad_de_Gente from comprador c
-where c.DNI in (
-     select distinct p.Comprador_DNI from pedido p
-     join tarifa t on p.fecha_Compra = t.Fecha_Compra 
-     join entrada e on t.Tipo_Entrada = e.Tipo_Entrada
-     join sesión s on e.Estadio_Sesion = s.Estadio
-     join partido p2 on s.Estadio = p2.Sesion_Estadio_id_Estadio
-     where p2.id_Partido = 5 or p2.id_Partido = 10)
-group by c.país_Residencia
-order by Cantidad_de_Gente desc;
+SELECT c.país_Residencia AS País, COUNT(*) AS Cantidad_Ventas
+FROM pedido p
+JOIN comprador c ON p.Comprador_DNI = c.DNI
+JOIN entrada e ON p.tipo_entrada = e.Tipo_Entrada AND p.estadio_sesion = e.Estadio_Sesion
+JOIN partido pt ON e.Estadio_Sesion = pt.Sesion_Estadio_id_Estadio
+WHERE pt.id_Partido IN (7, 8)
+GROUP BY c.país_Residencia
+ORDER BY Cantidad_Ventas DESC;
+
 
 /*Primera vista*/
 CREATE VIEW Victorias_de_cada_equipo AS 
