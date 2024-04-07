@@ -1,0 +1,249 @@
+use torneoscsgo;
+
+/*consulta nº1*/
+select concat("ID: ", e.id_Equipo," Nombre: ", e.nombre)  as 'InfoEquipo', COUNT(*) as 'Victorias_Nacionales' from equipo e
+inner join partido p on e.id_Equipo = p.Equipo1 or e.id_Equipo = p.Equipo2
+inner join sesión s on p.Sesion_Estadio_id_Estadio = s.Estadio
+inner join torneo t on s.Torneo = t.nombre_Torneo
+where (p.Equipo1 = e.id_Equipo and p.ResultadoEquipo1 > p.ResultadoEquipo2) or (p.Equipo2 = e.id_Equipo and p.ResultadoEquipo2 > p.ResultadoEquipo1) and t.Tipo = 'Nacional'
+group by e.id_Equipo 
+order by count(p.id_Partido) desc;
+
+/*consulta nº2*/
+select concat("Menores ID: ", e.id_Equipo," Nombre: ", e.nombre)  as 'InfoEquipo', count(j.Edad<20) as 'NumeroDeJugadores' from equipo e 
+inner join jugador j on e.id_Equipo = j.Equipo 
+where j.Edad < 20
+group by e.id_Equipo
+union 
+select concat("Mayores ID: ", e.id_Equipo," Nombre: ", e.nombre)  as 'InfoEquipo', count(j.Edad>28) as 'NumeroDeJugadores'from equipo e 
+inner join jugador j on e.id_Equipo = j.Equipo 
+where j.Edad > 28
+group by e.id_Equipo;
+
+/*consulta nº3*/
+select concat(p.hora_Inicio, "<>", p.hora_Fin) as 'HorarioPartido', e.nombre as 'NombreEquipo1', e2.nombre as 'NombreEquipo2', sum(p.ResultadoEquipo1+p.ResultadoEquipo2) as 'TotalDeRondas' 
+from partido p 
+inner join equipo e on p.Equipo1 = e.id_Equipo 
+inner join equipo e2 on p.Equipo2 = e2.id_Equipo 
+group by concat(p.hora_Inicio, "<>", p.hora_Fin), e.nombre, e2.nombre 
+having sum(p.ResultadoEquipo1+p.ResultadoEquipo2)>20
+order by HorarioPartido desc; 
+
+/*consulta nº4*/
+select concat(month(p.fecha_Compra),'-', monthname(p.fecha_Compra)) as Mes, sum(p.Importe) as Dinero_Generado, count(*) as Pedidos_Realizados from pedido p
+group by Mes
+order by Dinero_Generado desc;
+
+/*consulta nº5*/
+select c.país_Residencia as Pais, count(*) as Cantidad_de_Gente from comprador c
+where c.DNI in (
+     select distinct p.Comprador_DNI from pedido p
+     join tarifa t on p.fecha_Compra = t.Fecha_Compra 
+     join entrada e on t.Tipo_Entrada = e.Tipo_Entrada
+     join sesión s on e.Estadio_Sesion = s.Estadio
+     join partido p2 on s.Estadio = p2.Sesion_Estadio_id_Estadio
+     where p2.id_Partido = 5 or p2.id_Partido = 10)
+group by c.país_Residencia
+order by Cantidad_de_Gente desc;
+
+/*Primera vista*/
+CREATE VIEW Victorias_de_cada_equipo AS 
+select concat("ID: ", e.id_Equipo," Nombre: ", e.nombre)  AS 'InfoEquipo', COUNT(p.id_Partido) AS 'Victorias_Nacionales' from equipo e
+inner join partido p ON e.id_Equipo = p.Equipo1 OR e.id_Equipo = p.Equipo2
+inner join sesión s ON p.Sesion_Estadio_id_Estadio = s.Estadio
+inner join torneo t ON s.Torneo = t.nombre_Torneo
+where (p.Equipo1 = e.id_Equipo AND p.ResultadoEquipo1 > p.ResultadoEquipo2) or (p.Equipo2 = e.id_Equipo AND p.ResultadoEquipo2 > p.ResultadoEquipo1) and t.Tipo = 'Nacional'
+group by e.id_Equipo 
+order by count(p.id_Partido) DESC;
+/*Segunda vista*/
+CREATE VIEW Ingresos_y_pedidos_totales_por_mes AS 
+select concat(month(p.fecha_Compra),'-', monthname(p.fecha_Compra)) as Mes, sum(p.Importe) as Dinero_Generado, count(*) as Pedidos_Realizados from pedido p
+group by Mes
+order by Dinero_Generado desc;
+
+/*Primera funcion*/
+DELIMITER $$
+CREATE FUNCTION calcularIngresosTorneo(Nombre_torneo VARCHAR(45)) RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    DECLARE total_income DECIMAL(10,2);
+    
+    SELECT SUM(Importe) INTO total_income
+    FROM pedido
+    WHERE tipo_entrada IN (
+        SELECT Tipo_Entrada
+        FROM entrada
+        WHERE Estadio_Sesion IN (
+            SELECT Estadio
+            FROM sesión
+            WHERE Torneo = Nombre_torneo
+        )
+    );
+    RETURN total_income;
+END $$
+DELIMITER ;
+
+SELECT calcularIngresosTorneo('eSL Liga');
+
+/*Segunda función*/
+DELIMITER $$
+CREATE FUNCTION calcular_porcentaje_victorias_equipo_en_torneo(id_equipo INT, nombre_torneo VARCHAR(45)) RETURNS DECIMAL(5, 2)
+DETERMINISTIC 
+BEGIN
+    DECLARE total_partidos INT;
+    DECLARE total_victorias INT;
+    DECLARE porcentaje_victorias DECIMAL(5, 2);
+
+    SELECT COUNT(*) INTO total_partidos
+    FROM partido p
+    JOIN sesión s ON p.Sesion_Estadio_id_Estadio = s.Estadio
+    JOIN torneo t ON s.Torneo = t.nombre_Torneo
+    WHERE (p.Equipo1 = id_equipo OR p.Equipo2 = id_equipo) AND t.nombre_Torneo = nombre_torneo;
+
+    SELECT SUM(CASE WHEN p.ResultadoEquipo1 > p.ResultadoEquipo2 AND p.Equipo1 = id_equipo THEN 1 
+                    WHEN p.ResultadoEquipo2 > p.ResultadoEquipo1 AND p.Equipo2 = id_equipo THEN 1 ELSE 0 END) INTO total_victorias
+    FROM partido p
+    JOIN sesión s ON p.Sesion_Estadio_id_Estadio = s.Estadio
+    JOIN torneo t ON s.Torneo = t.nombre_Torneo
+    WHERE (p.Equipo1 = id_equipo OR p.Equipo2 = id_equipo) AND t.nombre_Torneo = nombre_torneo;
+
+    IF total_partidos > 0 THEN
+        SET porcentaje_victorias = (total_victorias / total_partidos) * 100;
+    ELSE
+        SET porcentaje_victorias = 0;
+    END IF;
+    RETURN porcentaje_victorias;
+END $$
+DELIMITER ;
+
+SELECT calcular_porcentaje_victorias_equipo_en_torneo('6','eSL Liga');
+
+/*Procedimiento número 1*/
+DROP PROCEDURE IF EXISTS gestionar_informacion_equipo;
+DELIMITER $$
+CREATE PROCEDURE gestionar_informacion_equipo(IN nombre_equipo VARCHAR(45), IN nueva_abreviatura VARCHAR(4))
+BEGIN
+    DECLARE equipo_existente INT;
+    DECLARE nuevo_id_equipo INT;
+    -- Comprueba si existe el equipo o no
+    SELECT COUNT(*) INTO equipo_existente FROM equipo WHERE nombre = nombre_equipo;
+    IF equipo_existente > 0 THEN
+        -- Modifica la abreviatura del equipo
+        UPDATE equipo SET abreviatura_Nombre = nueva_abreviatura WHERE nombre = nombre_equipo;
+        SELECT CONCAT('Se ha actualizado la abreviatura del equipo ', nombre_equipo, ' a ', nueva_abreviatura) AS Mensaje;
+    ELSE
+        -- Inserta el equipo nuevo en caso de que no existiera
+        SELECT (MAX(id_Equipo)+1) INTO nuevo_id_equipo FROM equipo;
+        SET nuevo_id_equipo = IFNULL(nuevo_id_equipo, 0) + 1;
+        INSERT INTO equipo (id_Equipo, nombre, abreviatura_Nombre) VALUES (nuevo_id_equipo, nombre_equipo, nueva_abreviatura);
+        SELECT CONCAT('Se ha creado un nuevo equipo con ID ', nuevo_id_equipo, ', nombre ', nombre_equipo, ' y abreviatura ', nueva_abreviatura) AS Mensaje;
+    END IF;
+END $$
+DELIMITER ;
+CALL gestionar_informacion_equipo('Prueba nuevo equipo','PNE');
+
+/*Procedimiento número 2*/
+DELIMITER $$
+CREATE PROCEDURE generar_reporte_ingresos_torneo(IN nombre_torneo VARCHAR(45))
+BEGIN
+    DECLARE total_ingresos DECIMAL(10, 2);
+    DECLARE total_pedidos INT;
+    -- Calcular los ingresos totales del torneo utilizando la función
+    SET total_ingresos = calcularIngresosTorneo(nombre_torneo);
+
+    -- Calcular el número total de pedidos realizados en ese torneo
+    SELECT COUNT(*) INTO total_pedidos
+    FROM pedido
+    WHERE tipo_entrada IN (
+        SELECT Tipo_Entrada
+        FROM entrada
+        WHERE Estadio_Sesion IN (
+            SELECT Estadio
+            FROM sesión
+            WHERE Torneo = nombre_torneo
+        )
+    );
+    SELECT CONCAT('Los ingresos totales del torneo ', nombre_torneo, ' son: ', total_ingresos,'€.') AS Total_Ingresos,
+           CONCAT('El número total de pedidos realizados en el torneo ', nombre_torneo, ' es: ', total_pedidos) AS Total_Pedidos;
+END $$
+DELIMITER ;
+
+/*Procedimiento numero 3*/
+CALL generar_reporte_ingresos_torneo('eSL Liga');
+DROP PROCEDURE IF EXISTS generar_informe_jugadores_equipo;
+DELIMITER $$
+CREATE PROCEDURE generar_informe_DNI_jugadores_equipo(IN nombre_equipo VARCHAR(45))
+BEGIN
+    DECLARE done BOOLEAN DEFAULT FALSE;
+    DECLARE dni_jugador VARCHAR(11);
+    DECLARE informacion_jugadores VARCHAR(2000) DEFAULT '';
+    DECLARE tabla_jugadores VARCHAR(2000) DEFAULT '';
+
+    -- Seleccionamos los jugadores del equipo proporcionado
+    DECLARE jugador_cursor CURSOR FOR
+        SELECT DNI FROM jugador
+        WHERE Equipo = (
+            SELECT id_Equipo FROM equipo 
+            WHERE nombre = nombre_equipo
+        );
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    OPEN jugador_cursor;
+    read_loop: LOOP
+        FETCH jugador_cursor INTO dni_jugador;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+        -- Volcamos la información del jugador
+        SET informacion_jugadores = CONCAT_WS(' ',dni_jugador);
+        SET tabla_jugadores = CONCAT(tabla_jugadores, informacion_jugadores, '\n');
+    END LOOP;
+    CLOSE jugador_cursor;
+    SELECT tabla_jugadores AS Informacion_Jugadores;
+END $$
+DELIMITER ;
+CALL generar_informe_jugadores_equipo('G2 Esports');
+
+/*Trigger numero 1*/
+DELIMITER $$
+CREATE TABLE auditoria_pedidos(
+    fecha_compra DATETIME,
+    accion VARCHAR(100),
+    fecha_modificacion DATETIME,
+    PRIMARY KEY (fecha_compra),
+    FOREIGN KEY (fecha_compra) REFERENCES pedido(fecha_Compra)
+);
+DROP TRIGGER IF EXISTS audit_pedidos;
+DELIMITER $$
+CREATE TRIGGER audit_pedidos
+AFTER UPDATE ON pedido
+FOR EACH ROW
+BEGIN
+    DECLARE accion VARCHAR(100) DEFAULT '';
+
+    IF OLD.estado_Transacción <> NEW.estado_Transacción THEN
+        SET accion = CONCAT('Estado cambiado de ', OLD.estado_Transacción, ' a ', NEW.estado_Transacción);
+        INSERT INTO auditoria_pedidos (fecha_compra ,accion, fecha_modificacion)
+        VALUES (OLD.fecha_Compra , accion, NOW());
+    END IF;
+END $$
+DELIMITER ;
+/*Trigger numero 2*/
+DELIMITER $$
+CREATE TRIGGER actualizar_stock
+AFTER INSERT ON pedido
+FOR EACH ROW
+BEGIN
+    DECLARE cantidad_comprada INT;
+    DECLARE tipo_entrada_online ENUM('online', 'presencial');
+    
+    SET cantidad_comprada = NEW.cantidad;
+    SET tipo_entrada_online = (SELECT Medio FROM entrada WHERE Tipo_Entrada = NEW.tipo_entrada AND Estadio_Sesion = NEW.estadio_sesion);
+    
+    IF tipo_entrada_online != 'online' THEN
+        UPDATE entrada
+        SET Stock = Stock - cantidad_comprada
+        WHERE Tipo_Entrada = NEW.tipo_entrada AND Estadio_Sesion = NEW.estadio_sesion;
+    END IF;
+END $$
+DELIMITER ;
