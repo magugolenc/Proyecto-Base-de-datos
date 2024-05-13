@@ -1,19 +1,46 @@
--- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
 --
--- Host: localhost    Database: torneoscsgo
+-- Host: 34.228.77.157    Database: torneoscsgo
 -- ------------------------------------------------------
--- Server version	8.0.36
+-- Server version	8.0.36-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Temporary view structure for view `Ingresos_y_pedidos_totales_por_mes`
+--
+
+DROP TABLE IF EXISTS `Ingresos_y_pedidos_totales_por_mes`;
+/*!50001 DROP VIEW IF EXISTS `Ingresos_y_pedidos_totales_por_mes`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `Ingresos_y_pedidos_totales_por_mes` AS SELECT 
+ 1 AS `Mes`,
+ 1 AS `Dinero_Generado`,
+ 1 AS `Pedidos_Realizados`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `Victorias_de_cada_equipo`
+--
+
+DROP TABLE IF EXISTS `Victorias_de_cada_equipo`;
+/*!50001 DROP VIEW IF EXISTS `Victorias_de_cada_equipo`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `Victorias_de_cada_equipo` AS SELECT 
+ 1 AS `InfoEquipo`,
+ 1 AS `Victorias_Nacionales`*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `auditoria_pedidos`
@@ -121,7 +148,7 @@ CREATE TABLE `equipo` (
 
 LOCK TABLES `equipo` WRITE;
 /*!40000 ALTER TABLE `equipo` DISABLE KEYS */;
-INSERT INTO `equipo` VALUES (1,'Astralis','ASTR',2016,'Nikolaj Nyholm'),(2,'Natus Vincere','NAVI',2009,'Okelsandr Kokhanovskyy'),(3,'Fnatic','FNTC',2004,'Sam Mathews'),(4,'Team Liquid','TL',2000,'Netherlands Nazgul'),(5,'Cloud9','C9',2013,'Jack Etienne'),(6,'FaZe Clan','FAZE',2010,'Christoph Pachler'),(7,'Virtus.pro','VP',2003,'Nikolai Petrossian'),(8,'G2 Esports','G2',2013,'Alban Dechelotte'),(9,'Made in Brazil','MIBR',2003,'Roberta Coelho'),(10,'ENCE Esports','ENCE',2013,'Mika Kuusisto'),(11,'Renegades','RNG',2015,'Chris Roumayeh'),(12,'OG Esports','OG',2019,'JMR Luna'),(13,'BIG','BIG',2017,'Daniel Finkler'),(14,'Ninjas in Pyjamas','NiP',2000,'Hicham Chahine'),(15,'Team Vitality','VIT',2013,'nicolas_maurer'),(17,'Prueba nuevo equipo','PNN',NULL,NULL);
+INSERT INTO `equipo` VALUES (1,'Astralis','ASTR',2016,'Nikolaj Nyholm'),(2,'Natus Vincere','NAVI',2009,'Okelsandr Kokhanovskyy'),(3,'Fnatic','FNTC',2004,'Sam Mathews'),(4,'Team Liquid','TL',2000,'Netherlands Nazgul'),(5,'Cloud9','C9',2013,'Jack Etienne'),(6,'FaZe Clan','FAZE',2010,'Christoph Pachler'),(7,'Virtus.pro','VP',2003,'Nikolai Petrossian'),(8,'G2 Esports','G2',2013,'Alban Dechelotte'),(9,'Made in Brazil','MIBR',2003,'Roberta Coelho'),(10,'ENCE Esports','ENCE',2013,'Mika Kuusisto'),(11,'Renegades','RNG',2015,'Chris Roumayeh'),(12,'OG Esports','OG',2019,'JMR Luna'),(13,'BIG','BIG',2017,'Daniel Finkler'),(14,'Ninjas in Pyjamas','NiP',2000,'Hicham Chahine'),(15,'Team Vitality','VIT',2013,'nicolas_maurer'),(17,'Prueba nuevo equipo','PNE',NULL,NULL);
 /*!40000 ALTER TABLE `equipo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -152,20 +179,6 @@ LOCK TABLES `estadio` WRITE;
 INSERT INTO `estadio` VALUES (1,'EEUU','Arizona','Phoenix',66249),(2,'EEUU','Hawai','Honolulu',71989),(3,'EEUU','Arkansas','Fayetteville',55413),(4,'EEUU','Maryland','Baltimore',75304),(5,'EEUU','Maryland','Lincoln',49065),(6,'Malta','','Valetta',89954),(7,'EEUU','Nevada','Las Vegas',42330),(8,'EEUU','New York','New York',56082),(9,'Italia','','Venice',56620),(10,'EEUU','Washington','Bellevue',66955),(11,'EEUU','Wisconsin','Milwaukee',59106),(12,'EEUU','Misuri','St. Louis',19751),(13,'EEUU','Illinois','Chicago',96825),(14,'EEUU','Washington','Seattle',60259),(15,'EEUU','Texas','Dallas',66663),(16,'EEUU','Massachusetts','Boston',40211),(17,'EEUU','Colorado','Lakewood',33351),(18,'EEUU','Texas','Houston',31980),(19,'Italia','','Rome',71065),(20,'EEUU','Virginia','Richmond',65379),(21,'EEUU','Virginia','Arlington',43448),(22,'Portugal','','Lisbon',85803),(23,'EEUU','Tennessee','Nashville',35023),(24,'EEUU','California','Fullerton',76582),(25,'EEUU','California','Sacramento',44444),(26,'EEUU','Illinois','Springfield',99909),(27,'EEUU','Florida','Orlando',55956),(28,'EEUU','Carolina del Norte','Charlotte',80127),(29,'EEUU','Nebraska','Omaha',65985),(30,'Francia','Berry','Paris',100000);
 /*!40000 ALTER TABLE `estadio` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Temporary view structure for view `ingresos_y_pedidos_totales_por_mes`
---
-
-DROP TABLE IF EXISTS `ingresos_y_pedidos_totales_por_mes`;
-/*!50001 DROP VIEW IF EXISTS `ingresos_y_pedidos_totales_por_mes`*/;
-SET @saved_cs_client     = @@character_set_client;
-/*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `ingresos_y_pedidos_totales_por_mes` AS SELECT 
- 1 AS `Mes`,
- 1 AS `Dinero_Generado`,
- 1 AS `Pedidos_Realizados`*/;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `jugador`
@@ -269,13 +282,13 @@ UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`SqlAdmin_m`@`%`*/ /*!50003 TRIGGER `actualizar_stock` AFTER INSERT ON `pedido` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `actualizar_stock` AFTER INSERT ON `pedido` FOR EACH ROW BEGIN
 
     DECLARE cantidad_comprada INT;
 
@@ -308,13 +321,13 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`SqlAdmin_m`@`%`*/ /*!50003 TRIGGER `audit_pedidos` AFTER UPDATE ON `pedido` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `audit_pedidos` AFTER UPDATE ON `pedido` FOR EACH ROW BEGIN
 
     DECLARE accion VARCHAR(100) DEFAULT '';
 
@@ -424,6 +437,37 @@ INSERT INTO `sesión` VALUES ('2023-02-11 17:00:00','2023-02-11 18:20:00','4','e
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tarifa`
+--
+
+DROP TABLE IF EXISTS `tarifa`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tarifa` (
+  `Tipo_Entrada` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'Estandar',
+  `Fecha_Compra` datetime NOT NULL,
+  `Cantidad` int NOT NULL DEFAULT '0',
+  `Estadio_Sesion` int NOT NULL,
+  PRIMARY KEY (`Fecha_Compra`),
+  KEY `fk_Entrada_has_Pedido_Pedido1_idx` (`Fecha_Compra`),
+  KEY `fk_Entrada_has_Pedido_Entrada1_idx` (`Tipo_Entrada`),
+  KEY `tarifa_entrada_fk` (`Tipo_Entrada`,`Estadio_Sesion`),
+  CONSTRAINT `tarifa_entrada_fk` FOREIGN KEY (`Tipo_Entrada`, `Estadio_Sesion`) REFERENCES `entrada` (`Tipo_Entrada`, `Estadio_Sesion`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `tarifa_pedido_fk` FOREIGN KEY (`Fecha_Compra`) REFERENCES `pedido` (`fecha_Compra`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tarifa`
+--
+
+LOCK TABLES `tarifa` WRITE;
+/*!40000 ALTER TABLE `tarifa` DISABLE KEYS */;
+INSERT INTO `tarifa` VALUES ('Estandar','2013-12-04 05:11:28',8,27),('Estandar','2013-12-23 11:28:07',4,21),('Estandar','2013-12-25 03:54:57',5,26),('Estandar','2013-12-31 15:28:39',3,3),('VIP','2014-02-22 12:03:38',1,2),('Estandar','2014-03-10 09:15:18',4,21),('Estandar','2014-03-26 19:05:15',3,21),('VIP','2014-04-10 03:49:52',3,3),('Estandar','2014-04-27 19:02:47',4,21),('VIP','2014-05-17 03:18:20',4,21),('Estandar','2014-05-18 06:22:01',3,3),('Estandar','2014-05-25 16:27:23',4,21),('Estandar','2014-05-27 00:14:22',4,21),('VIP','2014-05-31 06:50:26',1,3),('VIP','2014-06-03 01:09:34',3,3),('VIP','2014-06-26 10:48:33',2,27),('Estandar','2014-07-04 14:02:55',6,2),('VIP','2014-07-20 03:52:44',4,21),('Estandar','2014-07-25 07:37:49',4,21),('Estandar','2014-08-05 04:36:56',3,21),('Estandar','2014-08-05 04:55:13',6,2),('Estandar','2014-08-06 09:56:29',3,21),('Estandar','2014-08-18 13:27:57',4,21),('Estandar','2014-09-14 20:33:39',5,26),('Estandar','2014-09-17 07:34:57',1,2),('VIP','2014-09-18 18:58:36',1,2),('Estandar','2014-10-17 15:36:41',3,3),('Estandar','2014-10-24 07:06:41',3,3),('Estandar','2014-11-02 17:17:26',3,3),('VIP','2014-11-07 12:25:21',2,27),('Estandar','2014-12-21 21:15:40',6,2),('Estandar','2015-01-19 16:24:46',4,21),('Estandar','2015-02-21 07:19:04',3,3),('Estandar','2015-03-20 22:12:02',1,2),('Estandar','2015-04-10 07:18:09',3,3),('Estandar','2015-05-22 09:27:16',6,2),('Estandar','2015-06-13 04:32:53',5,26),('VIP','2015-07-01 08:42:02',2,27),('Estandar','2015-07-01 10:14:21',4,21),('Estandar','2015-07-26 12:30:22',3,3),('Estandar','2015-08-02 01:53:32',6,2),('Estandar','2015-08-04 00:09:05',3,3),('VIP','2015-08-06 17:44:46',2,27),('Estandar','2015-08-15 13:52:08',1,2),('Estandar','2015-08-20 05:27:12',3,3),('Estandar','2015-08-31 20:15:02',3,3),('Estandar','2015-09-04 15:54:34',6,2),('VIP','2015-09-08 05:19:10',1,2),('Estandar','2015-10-02 05:45:33',4,21),('Estandar','2015-11-12 22:56:18',8,27),('Estandar','2015-11-26 01:55:28',1,2),('Estandar','2016-01-02 04:27:02',6,2),('VIP','2016-02-04 22:26:36',3,3),('Estandar','2016-02-11 19:36:53',6,2),('VIP','2016-02-17 20:56:15',2,27),('Estandar','2016-03-05 08:57:16',8,27),('Estandar','2016-03-24 03:41:06',3,3),('Estandar','2016-04-02 17:35:06',3,3),('Estandar','2016-04-12 09:06:34',6,2),('Estandar','2016-04-24 04:10:41',8,27),('Estandar','2016-04-26 13:04:34',4,21),('VIP','2016-05-01 15:40:36',4,21),('Estandar','2016-05-12 04:13:18',3,3),('VIP','2016-05-17 18:19:57',4,21),('Estandar','2016-07-11 17:47:38',4,21),('Estandar','2016-07-13 13:51:12',3,3),('VIP','2016-08-02 00:03:18',2,27),('Estandar','2016-08-26 19:00:54',3,3),('VIP','2016-09-17 00:31:21',2,27),('VIP','2016-09-17 07:08:00',3,3),('Estandar','2016-09-26 08:42:15',3,3),('Estandar','2016-10-13 02:58:06',4,21),('Estandar','2016-10-25 01:49:05',3,3),('Estandar','2016-10-27 20:45:23',4,21),('Estandar','2016-11-01 09:40:02',3,3),('Estandar','2016-11-05 17:16:50',8,27),('Estandar','2016-11-08 07:22:29',3,3),('Estandar','2016-11-12 12:56:00',3,3),('Estandar','2016-11-16 21:00:54',8,27),('Estandar','2016-11-21 16:15:51',8,27),('Estandar','2016-11-29 13:15:44',1,2),('Estandar','2016-12-14 15:15:42',4,21),('Estandar','2016-12-19 00:20:30',3,3),('Estandar','2016-12-23 15:03:06',3,3),('Estandar','2017-01-06 13:11:43',8,27),('VIP','2017-01-21 10:48:46',4,26),('VIP','2017-02-04 21:02:05',4,26),('Estandar','2017-02-11 10:55:21',5,26),('Estandar','2017-02-13 07:55:38',4,21),('Estandar','2017-02-14 20:33:55',4,21),('Estandar','2017-03-01 08:07:52',1,2),('Estandar','2017-03-05 20:42:40',4,21),('VIP','2017-03-11 01:57:31',4,26),('Estandar','2017-03-13 00:01:06',1,2),('Estandar','2017-03-24 00:26:16',1,2),('Estandar','2017-03-26 20:07:50',4,21),('Estandar','2017-04-02 19:54:57',3,21),('VIP','2017-04-08 14:00:13',2,27),('Estandar','2017-04-28 15:18:11',4,21),('Estandar','2017-04-28 18:20:47',3,3),('VIP','2017-04-30 18:28:21',4,21),('Estandar','2017-05-02 20:56:18',3,3),('Estandar','2017-05-06 07:49:52',3,21),('Estandar','2017-05-17 06:51:35',3,3),('Estandar','2017-06-02 05:25:24',3,3),('Estandar','2017-06-10 02:47:28',3,3),('Estandar','2017-06-28 14:08:58',1,2),('Estandar','2017-07-30 21:50:23',1,2),('Estandar','2017-08-03 14:13:27',4,21),('Estandar','2017-08-05 18:58:17',3,3),('Estandar','2017-08-15 22:56:04',5,26),('Estandar','2017-08-22 10:52:21',3,3),('VIP','2017-09-03 04:39:49',3,3),('Estandar','2017-09-21 02:18:13',8,27),('Estandar','2017-10-11 01:04:13',3,3),('Estandar','2017-11-03 17:04:04',1,2),('VIP','2017-11-09 14:06:27',2,27),('Estandar','2017-11-12 21:11:46',3,21),('VIP','2017-12-12 19:47:49',1,2),('Estandar','2017-12-15 09:38:45',1,2),('Estandar','2018-01-05 20:34:00',3,3),('Estandar','2018-01-27 07:23:15',4,21),('VIP','2018-02-06 20:08:25',2,27),('Estandar','2018-02-24 10:56:25',3,3),('Estandar','2018-03-05 22:32:42',8,27),('Estandar','2018-03-07 06:40:03',3,3),('Estandar','2018-03-07 07:09:07',3,3),('Estandar','2018-03-08 21:38:22',1,2),('Estandar','2018-03-15 01:27:56',4,21),('VIP','2018-03-16 13:32:39',2,27),('Estandar','2018-03-29 03:35:43',5,26),('Estandar','2018-04-02 11:35:21',1,2),('Estandar','2018-05-06 22:30:22',4,21),('Estandar','2018-05-12 08:34:43',1,2),('VIP','2018-05-13 15:29:01',4,21),('Estandar','2018-07-02 21:22:29',3,3),('Estandar','2018-07-28 04:47:53',6,2),('Estandar','2018-08-27 10:11:38',5,26),('Estandar','2018-09-19 10:44:45',1,2),('Estandar','2018-10-13 16:22:42',4,21),('VIP','2018-10-18 21:16:07',4,26),('VIP','2018-10-22 06:19:39',1,2),('Estandar','2018-10-27 10:36:53',4,21),('Estandar','2018-10-31 04:05:17',4,21),('Estandar','2018-11-29 10:16:31',8,27),('Estandar','2018-12-05 07:25:20',6,2),('Estandar','2019-01-11 15:24:09',3,3),('Estandar','2019-01-27 03:09:58',3,3),('Estandar','2019-02-05 18:19:44',4,21),('Estandar','2019-02-16 13:29:19',4,21),('Estandar','2019-02-28 03:39:51',3,3),('Estandar','2019-03-15 07:06:40',3,3),('Estandar','2019-03-30 13:43:51',6,2),('Estandar','2019-05-07 20:36:17',5,21),('Estandar','2019-07-07 01:31:23',3,21),('VIP','2019-08-01 20:02:10',4,21),('Estandar','2019-08-10 16:52:58',3,3),('Estandar','2019-08-20 03:15:05',5,26),('VIP','2019-09-18 14:46:27',2,27),('Estandar','2019-10-29 15:12:42',1,2),('Estandar','2019-11-11 13:33:32',6,2),('VIP','2020-01-09 15:03:02',1,2),('Estandar','2020-01-12 11:02:20',1,2),('Estandar','2020-01-14 04:29:30',4,21),('Estandar','2020-01-19 11:51:36',1,2),('Estandar','2020-02-12 22:46:11',4,21),('Estandar','2020-03-20 07:23:13',3,3),('VIP','2020-04-17 19:28:17',2,27),('Estandar','2020-04-21 09:22:17',3,3),('Estandar','2020-05-05 21:05:26',1,2),('Estandar','2020-05-27 13:41:05',4,21),('Estandar','2020-06-12 12:42:11',3,3),('Estandar','2020-07-03 06:35:10',3,3),('Estandar','2020-07-17 12:50:35',3,3),('Estandar','2020-07-24 05:40:43',3,3),('Estandar','2020-07-26 18:48:51',3,21),('Estandar','2020-09-03 12:45:22',3,3),('Estandar','2020-09-04 04:11:04',3,3),('Estandar','2020-09-10 06:14:40',3,3),('VIP','2020-10-02 14:07:02',4,26),('Estandar','2020-10-13 16:01:21',4,21),('Estandar','2020-11-09 13:03:58',4,21),('VIP','2020-11-24 01:14:39',3,3),('Estandar','2020-12-03 09:55:16',6,2),('Estandar','2021-02-10 06:14:29',1,2),('Estandar','2021-02-16 12:42:58',1,2),('Estandar','2021-02-24 21:11:11',3,3),('Estandar','2021-03-26 09:29:14',1,2),('VIP','2021-04-09 17:19:15',2,27),('VIP','2021-04-11 07:16:11',4,26),('Estandar','2021-04-27 21:35:01',8,27),('Estandar','2021-05-04 21:21:08',3,3),('VIP','2021-05-24 05:20:01',4,21),('VIP','2021-05-25 02:37:53',2,27),('Estandar','2021-05-25 18:09:06',4,21),('Estandar','2021-06-13 21:14:30',1,2),('Estandar','2021-06-23 05:52:29',3,3),('Estandar','2021-07-13 05:40:57',1,2),('Estandar','2021-07-21 15:02:42',3,21),('Estandar','2021-08-04 16:00:13',3,3),('VIP','2021-09-12 05:02:34',1,2),('Estandar','2021-10-15 21:46:28',6,2),('Estandar','2021-10-20 12:21:45',5,26),('Estandar','2021-10-21 03:53:41',3,3),('VIP','2021-11-23 15:25:07',2,27),('Estandar','2021-11-27 14:49:11',3,3),('Estandar','2021-12-24 02:25:41',5,26),('Estandar','2021-12-28 15:14:30',4,21),('VIP','2021-12-28 17:09:29',1,2),('Estandar','2022-01-17 17:23:11',3,3),('Estandar','2022-01-23 09:37:35',4,21),('Estandar','2022-01-26 14:38:07',3,3),('Estandar','2022-02-19 10:26:40',1,2),('Estandar','2022-03-25 17:50:08',5,26),('Estandar','2022-04-20 11:32:05',6,2),('Estandar','2022-05-04 04:51:35',1,2),('Estandar','2022-05-09 16:46:38',8,27),('Estandar','2022-05-12 18:22:52',3,3),('Estandar','2022-05-19 01:56:29',4,21),('VIP','2022-07-22 17:30:29',4,21),('Estandar','2022-08-19 10:21:03',8,27),('Estandar','2022-10-12 19:15:44',6,2),('Estandar','2022-11-19 14:54:46',3,21),('VIP','2022-11-21 19:08:39',3,3),('Estandar','2022-12-23 20:34:04',8,27),('Estandar','2022-12-27 05:24:03',3,3),('Estandar','2023-01-24 09:43:12',6,2),('Estandar','2023-02-03 06:22:04',4,21),('Estandar','2023-03-17 16:32:13',5,26),('Estandar','2023-04-20 14:35:43',3,3),('Estandar','2023-05-24 06:16:28',3,3),('Estandar','2023-05-29 17:42:26',3,3),('VIP','2023-06-18 11:55:50',2,27),('Estandar','2023-06-20 08:15:46',3,3),('VIP','2023-06-23 12:53:36',4,21),('Estandar','2023-07-13 05:13:44',8,27),('Estandar','2023-08-13 06:44:10',6,2),('Estandar','2023-08-13 15:14:20',1,2),('Estandar','2023-08-15 14:41:51',8,27),('Estandar','2023-08-29 11:43:25',4,21),('Estandar','2023-09-04 21:40:58',4,21),('Estandar','2023-09-22 15:13:21',3,3),('VIP','2023-09-29 10:15:27',1,2),('Estandar','2023-10-15 02:57:36',5,26),('Estandar','2023-11-26 05:51:18',5,26),('Estandar','2023-12-03 14:50:26',3,3);
+/*!40000 ALTER TABLE `tarifa` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `torneo`
 --
 
@@ -453,36 +497,19 @@ INSERT INTO `torneo` VALUES ('BLAST.tv París Mayor','Mundial','Mejor de 1','1.2
 UNLOCK TABLES;
 
 --
--- Temporary view structure for view `victorias_de_cada_equipo`
---
-
-DROP TABLE IF EXISTS `victorias_de_cada_equipo`;
-/*!50001 DROP VIEW IF EXISTS `victorias_de_cada_equipo`*/;
-SET @saved_cs_client     = @@character_set_client;
-/*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `victorias_de_cada_equipo` AS SELECT 
- 1 AS `InfoEquipo`,
- 1 AS `Victorias_Nacionales`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping events for database 'torneoscsgo'
---
-
---
 -- Dumping routines for database 'torneoscsgo'
 --
 /*!50003 DROP FUNCTION IF EXISTS `calcularIngresosTorneo` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-CREATE DEFINER=`SqlAdmin_m`@`%` FUNCTION `calcularIngresosTorneo`(Nombre_torneo VARCHAR(45)) RETURNS decimal(10,2)
+CREATE DEFINER=`root`@`%` FUNCTION `calcularIngresosTorneo`(Nombre_torneo VARCHAR(45)) RETURNS decimal(10,2)
     DETERMINISTIC
 BEGIN
 
@@ -524,13 +551,13 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-CREATE DEFINER=`SqlAdmin_m`@`%` FUNCTION `calcular_porcentaje_victorias_equipo_en_torneo`(id_equipo INT, nombre_torneo VARCHAR(45)) RETURNS decimal(5,2)
+CREATE DEFINER=`root`@`%` FUNCTION `calcular_porcentaje_victorias_equipo_en_torneo`(id_equipo INT, nombre_torneo VARCHAR(45)) RETURNS decimal(5,2)
     DETERMINISTIC
 BEGIN
 
@@ -590,13 +617,13 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-CREATE DEFINER=`SqlAdmin_m`@`%` PROCEDURE `generar_informe_DNI_jugadores_equipo`(IN nombre_equipo VARCHAR(45))
+CREATE DEFINER=`root`@`%` PROCEDURE `generar_informe_DNI_jugadores_equipo`(IN nombre_equipo VARCHAR(45))
 BEGIN
 
     DECLARE done BOOLEAN DEFAULT FALSE;
@@ -627,11 +654,7 @@ BEGIN
 
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
-
-
     OPEN jugador_cursor;
-
-
 
     read_loop: LOOP
 
@@ -653,89 +676,6 @@ BEGIN
 
     CLOSE jugador_cursor;
 
-
-
-    SELECT tabla_jugadores AS Informacion_Jugadores;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `generar_informe_jugadores_equipo` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`SqlAdmin_m`@`%` PROCEDURE `generar_informe_jugadores_equipo`(IN nombre_equipo VARCHAR(45))
-BEGIN
-
-    DECLARE done BOOLEAN DEFAULT FALSE;
-
-    DECLARE dni_jugador VARCHAR(11);
-
-    DECLARE nombre_jugador VARCHAR(45);
-
-    DECLARE fecha_nacimiento DATE;
-
-    DECLARE nacionalidad VARCHAR(45);
-
-    DECLARE edad INT;
-
-    DECLARE informacion_jugadores VARCHAR(2000) DEFAULT '';
-
-    DECLARE tabla_jugadores VARCHAR(2000) DEFAULT '';
-
-
-
-    -- Seleccionamos los jugadores del equipo proporcionado
-
-    DECLARE jugador_cursor CURSOR FOR
-
-        SELECT DNI, nombre_Jugador, fecha_Nacimiento, Nacionalidad, Edad
-
-        FROM jugador
-
-        WHERE Equipo = (SELECT id_Equipo FROM equipo WHERE nombre = nombre_equipo);
-
-
-
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-
-
-
-    OPEN jugador_cursor;
-
-
-
-    read_loop: LOOP
-
-        FETCH jugador_cursor INTO dni_jugador, nombre_jugador, fecha_nacimiento, nacionalidad, edad;
-
-        IF done THEN
-
-            LEAVE read_loop;
-
-        END IF;
-
-        -- Volcamos la información del jugador
-
-        SET informacion_jugadores = CONCAT_WS(' ',dni_jugador, nombre_jugador, fecha_nacimiento, nacionalidad, edad);
-
-        SET tabla_jugadores = CONCAT(tabla_jugadores, informacion_jugadores, '\n');
-
-    END LOOP;
-
-    CLOSE jugador_cursor;
-
-
-
     SELECT tabla_jugadores AS Informacion_Jugadores;
 
 END ;;
@@ -748,13 +688,13 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-CREATE DEFINER=`SqlAdmin_m`@`%` PROCEDURE `generar_reporte_ingresos_torneo`(IN nombre_torneo VARCHAR(45))
+CREATE DEFINER=`root`@`%` PROCEDURE `generar_reporte_ingresos_torneo`(IN nombre_torneo VARCHAR(45))
 BEGIN
 
     DECLARE total_ingresos DECIMAL(10, 2);
@@ -805,13 +745,13 @@ DELIMITER ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-CREATE DEFINER=`SqlAdmin_m`@`%` PROCEDURE `gestionar_informacion_equipo`(IN nombre_equipo VARCHAR(45), IN nueva_abreviatura VARCHAR(4))
+CREATE DEFINER=`root`@`%` PROCEDURE `gestionar_informacion_equipo`(IN nombre_equipo VARCHAR(45), IN nueva_abreviatura VARCHAR(4))
 BEGIN
 
     DECLARE equipo_existente INT;
@@ -852,37 +792,37 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
--- Final view structure for view `ingresos_y_pedidos_totales_por_mes`
+-- Final view structure for view `Ingresos_y_pedidos_totales_por_mes`
 --
 
-/*!50001 DROP VIEW IF EXISTS `ingresos_y_pedidos_totales_por_mes`*/;
+/*!50001 DROP VIEW IF EXISTS `Ingresos_y_pedidos_totales_por_mes`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`SqlAdmin_m`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `ingresos_y_pedidos_totales_por_mes` AS select concat(month(`p`.`fecha_Compra`),'-',convert(monthname(`p`.`fecha_Compra`) using utf8mb4)) AS `Mes`,sum(`p`.`Importe`) AS `Dinero_Generado`,count(0) AS `Pedidos_Realizados` from `pedido` `p` group by `Mes` order by `Dinero_Generado` desc */;
+/*!50013 DEFINER=`root`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `Ingresos_y_pedidos_totales_por_mes` AS select concat(month(`p`.`fecha_Compra`),'-',monthname(`p`.`fecha_Compra`)) AS `Mes`,sum(`p`.`Importe`) AS `Dinero_Generado`,count(0) AS `Pedidos_Realizados` from `pedido` `p` group by `Mes` order by `Dinero_Generado` desc */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
--- Final view structure for view `victorias_de_cada_equipo`
+-- Final view structure for view `Victorias_de_cada_equipo`
 --
 
-/*!50001 DROP VIEW IF EXISTS `victorias_de_cada_equipo`*/;
+/*!50001 DROP VIEW IF EXISTS `Victorias_de_cada_equipo`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`SqlAdmin_m`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `victorias_de_cada_equipo` AS select concat('ID: ',`e`.`id_Equipo`,' Nombre: ',`e`.`nombre`) AS `InfoEquipo`,count(`p`.`id_Partido`) AS `Victorias_Nacionales` from (((`equipo` `e` join `partido` `p` on(((`e`.`id_Equipo` = `p`.`Equipo1`) or (`e`.`id_Equipo` = `p`.`Equipo2`)))) join `sesión` `s` on((`p`.`Sesion_Estadio_id_Estadio` = `s`.`Estadio`))) join `torneo` `t` on((`s`.`Torneo` = `t`.`nombre_Torneo`))) where (((`p`.`Equipo1` = `e`.`id_Equipo`) and (`p`.`ResultadoEquipo1` > `p`.`ResultadoEquipo2`)) or ((`p`.`Equipo2` = `e`.`id_Equipo`) and (`p`.`ResultadoEquipo2` > `p`.`ResultadoEquipo1`) and (`t`.`Tipo` = 'Nacional'))) group by `e`.`id_Equipo` order by count(`p`.`id_Partido`) desc */;
+/*!50013 DEFINER=`root`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `Victorias_de_cada_equipo` AS select concat('ID: ',`e`.`id_Equipo`,' Nombre: ',`e`.`nombre`) AS `InfoEquipo`,count(`p`.`id_Partido`) AS `Victorias_Nacionales` from (((`equipo` `e` join `partido` `p` on(((`e`.`id_Equipo` = `p`.`Equipo1`) or (`e`.`id_Equipo` = `p`.`Equipo2`)))) join `sesión` `s` on((`p`.`Sesion_Estadio_id_Estadio` = `s`.`Estadio`))) join `torneo` `t` on((`s`.`Torneo` = `t`.`nombre_Torneo`))) where (((`p`.`Equipo1` = `e`.`id_Equipo`) and (`p`.`ResultadoEquipo1` > `p`.`ResultadoEquipo2`)) or ((`p`.`Equipo2` = `e`.`id_Equipo`) and (`p`.`ResultadoEquipo2` > `p`.`ResultadoEquipo1`) and (`t`.`Tipo` = 'Nacional'))) group by `e`.`id_Equipo` order by count(`p`.`id_Partido`) desc */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -896,4 +836,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-07 19:40:49
+-- Dump completed on 2024-05-13 14:07:22
