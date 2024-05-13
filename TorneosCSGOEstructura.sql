@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
 --
 -- Host: localhost    Database: torneoscsgo
 -- ------------------------------------------------------
@@ -7,7 +7,7 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -186,6 +186,116 @@ CREATE TABLE `pedido` (
   CONSTRAINT `fk_Pedido_Tipo_Entrada` FOREIGN KEY (`tipo_entrada`, `estadio_sesion`) REFERENCES `entrada` (`Tipo_Entrada`, `Estadio_Sesion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `actualizar_stock` AFTER INSERT ON `pedido` FOR EACH ROW BEGIN
+
+
+
+    DECLARE cantidad_comprada INT;
+
+
+
+    DECLARE tipo_entrada_online ENUM('online', 'presencial');
+
+
+
+    
+
+
+
+    SET cantidad_comprada = NEW.cantidad;
+
+
+
+    SET tipo_entrada_online = (SELECT Medio FROM entrada WHERE Tipo_Entrada = NEW.tipo_entrada AND Estadio_Sesion = NEW.estadio_sesion);
+
+
+
+    
+
+
+
+    IF tipo_entrada_online != 'online' THEN
+
+
+
+        UPDATE entrada
+
+
+
+        SET Stock = Stock - cantidad_comprada
+
+
+
+        WHERE Tipo_Entrada = NEW.tipo_entrada AND Estadio_Sesion = NEW.estadio_sesion;
+
+
+
+    END IF;
+
+
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb3 */ ;
+/*!50003 SET character_set_results = utf8mb3 */ ;
+/*!50003 SET collation_connection  = utf8mb3_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `audit_pedidos` AFTER UPDATE ON `pedido` FOR EACH ROW BEGIN
+
+
+
+    DECLARE accion VARCHAR(100) DEFAULT '';
+
+
+
+
+
+
+
+    IF OLD.estado_Transacción <> NEW.estado_Transacción THEN
+
+
+
+        SET accion = CONCAT('Estado cambiado de ', OLD.estado_Transacción, ' a ', NEW.estado_Transacción);
+
+
+
+        INSERT INTO auditoria_pedidos (fecha_compra ,accion, fecha_modificacion)
+
+
+
+        VALUES (OLD.fecha_Compra , accion, NOW());
+
+
+
+    END IF;
+
+
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `región`
@@ -244,6 +354,27 @@ CREATE TABLE `sesión` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tarifa`
+--
+
+DROP TABLE IF EXISTS `tarifa`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tarifa` (
+  `Tipo_Entrada` varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL DEFAULT 'Estandar',
+  `Fecha_Compra` datetime NOT NULL,
+  `Cantidad` int NOT NULL DEFAULT '0',
+  `Estadio_Sesion` int NOT NULL,
+  PRIMARY KEY (`Fecha_Compra`),
+  KEY `fk_Entrada_has_Pedido_Pedido1_idx` (`Fecha_Compra`),
+  KEY `fk_Entrada_has_Pedido_Entrada1_idx` (`Tipo_Entrada`),
+  KEY `tarifa_entrada_fk` (`Tipo_Entrada`,`Estadio_Sesion`),
+  CONSTRAINT `tarifa_entrada_fk` FOREIGN KEY (`Tipo_Entrada`, `Estadio_Sesion`) REFERENCES `entrada` (`Tipo_Entrada`, `Estadio_Sesion`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `tarifa_pedido_fk` FOREIGN KEY (`Fecha_Compra`) REFERENCES `pedido` (`fecha_Compra`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `torneo`
 --
 
@@ -276,6 +407,10 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Dumping routines for database 'torneoscsgo'
+--
+
+--
 -- Final view structure for view `ingresos_y_pedidos_totales_por_mes`
 --
 
@@ -283,12 +418,12 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`SqlAdmin_m`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `ingresos_y_pedidos_totales_por_mes` AS select concat(month(`p`.`fecha_Compra`),'-',convert(monthname(`p`.`fecha_Compra`) using utf8mb4)) AS `Mes`,sum(`p`.`Importe`) AS `Dinero_Generado`,count(0) AS `Pedidos_Realizados` from `pedido` `p` group by `Mes` order by `Dinero_Generado` desc */;
+/*!50013 DEFINER=`root`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `ingresos_y_pedidos_totales_por_mes` AS select concat(month(`p`.`fecha_Compra`),'-',monthname(`p`.`fecha_Compra`)) AS `Mes`,sum(`p`.`Importe`) AS `Dinero_Generado`,count(0) AS `Pedidos_Realizados` from `pedido` `p` group by `Mes` order by `Dinero_Generado` desc */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -301,11 +436,11 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`SqlAdmin_m`@`%` SQL SECURITY DEFINER */
+/*!50013 DEFINER=`root`@`%` SQL SECURITY DEFINER */
 /*!50001 VIEW `victorias_de_cada_equipo` AS select concat('ID: ',`e`.`id_Equipo`,' Nombre: ',`e`.`nombre`) AS `InfoEquipo`,count(`p`.`id_Partido`) AS `Victorias_Nacionales` from (((`equipo` `e` join `partido` `p` on(((`e`.`id_Equipo` = `p`.`Equipo1`) or (`e`.`id_Equipo` = `p`.`Equipo2`)))) join `sesión` `s` on((`p`.`Sesion_Estadio_id_Estadio` = `s`.`Estadio`))) join `torneo` `t` on((`s`.`Torneo` = `t`.`nombre_Torneo`))) where (((`p`.`Equipo1` = `e`.`id_Equipo`) and (`p`.`ResultadoEquipo1` > `p`.`ResultadoEquipo2`)) or ((`p`.`Equipo2` = `e`.`id_Equipo`) and (`p`.`ResultadoEquipo2` > `p`.`ResultadoEquipo1`) and (`t`.`Tipo` = 'Nacional'))) group by `e`.`id_Equipo` order by count(`p`.`id_Partido`) desc */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -320,4 +455,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-07 19:41:34
+-- Dump completed on 2024-05-13 14:20:04
